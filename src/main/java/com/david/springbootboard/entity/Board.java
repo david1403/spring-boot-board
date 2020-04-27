@@ -1,6 +1,8 @@
 package com.david.springbootboard.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +13,9 @@ import java.util.List;
 @Getter @Setter
 @ToString(exclude = {"writer"})
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board {
+@DynamicInsert
+@DynamicUpdate
+public class Board extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="board_id")
     private Long boardId;
@@ -23,26 +27,21 @@ public class Board {
     @JoinColumn(name="writer_id")
     private Member writer;
 
-    @Column(name = "like_count")
-    private Integer likeCount;
+    @Column(name = "like_count", columnDefinition = "integer default 0")
+    private Integer likeCount = 0;
 
-    @Column(name="reply_count")
-    private Integer replyCount;
-    @Column(name="created_date")
-    private LocalDateTime createdDate;
-    @Column(name="modified_date")
-    private LocalDateTime modifiedDate;
+    @Column(name="reply_count", columnDefinition = "integer default 0")
+    private Integer replyCount = 0;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
-    public Integer getReplyCount() {
-        return this.replyList.size();
-    }
     public void increaseLikeCount() {
         this.likeCount += 1;
     }
     public void decreaseLikeCount() {
         this.likeCount -= 1;
     }
+    public void increaseReplyCount() { this.replyCount += 1; }
+    public void decreaseReplyCount() { this.replyCount -= 1; }
 }

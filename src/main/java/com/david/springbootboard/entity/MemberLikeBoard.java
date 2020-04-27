@@ -1,12 +1,16 @@
 package com.david.springbootboard.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="MEMBER_LIKE_BOARD")
 @Getter @Setter @ToString
+@DynamicInsert
+@DynamicUpdate
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberLikeBoard {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

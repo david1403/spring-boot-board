@@ -1,13 +1,17 @@
 package com.david.springbootboard.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity @Getter @Setter
+@DynamicInsert
+@DynamicUpdate
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reply {
+public class Reply extends  BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="reply_id")
     private Long replyId;
@@ -22,14 +26,11 @@ public class Reply {
     @JoinColumn(name="writer_id")
     private Member writer;
 
-    @Column(name="created_date")
-    private LocalDateTime createdDate;
-    @Column(name="modified_date")
-    private LocalDateTime modifiedDate;
 
 
     public void setBoard(Board board) {
         board.getReplyList().add(this);
+        board.increaseReplyCount();
         this.board = board;
     }
 }

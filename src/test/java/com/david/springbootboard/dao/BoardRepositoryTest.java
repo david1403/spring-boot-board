@@ -4,6 +4,8 @@ import com.david.springbootboard.entity.Board;
 import com.david.springbootboard.entity.Member;
 import com.david.springbootboard.entity.Reply;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,8 @@ class BoardRepositoryTest {
     @Autowired
     EntityManager em;
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Test
     @Rollback(false)
     public void CRUDTest() {
@@ -41,7 +46,7 @@ class BoardRepositoryTest {
         memberRepository.save(member2);
 
         Board board = new Board();
-        board.setTitle("Title1");
+        board.setTitle("Titlsdfe1");
         board.setWriter(member);
 
         boardRepository.save(board);
@@ -85,5 +90,18 @@ class BoardRepositoryTest {
         for (Reply reply : replyLists) {
             System.out.println("reply = " + reply.getContent());
         }
+
+        List<Board> boards = boardRepository.findAll();
+        for (Board b : boards) {
+            logger.warn(b.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            logger.warn(b.getModifiedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        }
+        try {
+            Thread.sleep(10000);
+        } catch (Exception ignored) {
+
+        }
+        findBoard2.setTitle("hello~");
+        boardRepository.save(findBoard2);
     }
 }
