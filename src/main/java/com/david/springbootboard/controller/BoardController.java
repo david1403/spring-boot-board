@@ -27,7 +27,11 @@ public class BoardController {
 
         log.info("----- list -----");
         model.addAttribute("list", boardService.findAll());
-        return "index";
+        return "/board/list";
+    }
+    @GetMapping("/register")
+    public void register(){
+
     }
 
     @PostMapping("/register")
@@ -40,11 +44,11 @@ public class BoardController {
         return "redirect:/board/list/";
     }
 
-    @GetMapping("/read")
-    public String read(@RequestParam(name = "boardId") Long boardId, Model model) {
+    @GetMapping({"/read", "/modify"})
+    public void read(@RequestParam(name = "boardId") Long boardId, Model model) {
         model.addAttribute("board", boardService.findBoardbyId(boardId));
-        return "read";
     }
+
 
     @PostMapping("/modify")
     public String modify(@RequestParam("boardId") Long boardId,
@@ -55,5 +59,11 @@ public class BoardController {
         board.setContent(content);
         boardService.save(board);
         return "redirect:/board/read?boardId=" + boardId;
+    }
+
+    @PostMapping("remove")
+    public String remove(@RequestParam("boardId") Long boardId) {
+        boardService.remove(boardId);
+        return "redirect:/board/list";
     }
 }
