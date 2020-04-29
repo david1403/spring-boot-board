@@ -40,8 +40,11 @@
                 <button data-oper="modify" class="btn btn-default"> Modify </button>
                 <button data-oper="list" class="btn btn-info" > List </button>
 
+
                 <form id="operForm" action="/board/modify" method="get">
                     <input type="hidden" id="boardId" name="boardId" value="${board.boardId}">
+                    <input type="hidden" id="pageNum" name="pageNum" value="${sessionScope.pageDto == null ?  1: sessionScope.pageDto.currentPage}">
+                    <input type="hidden" id="amount" name="amount" value="${sessionScope.pageDto == null ? 5 : sessionScope.pageDto.amount}">
                 </form>
 
             </div>
@@ -60,12 +63,14 @@
         var operForm = $("#operForm");
 
         $("button[data-oper='modify']").on("click", function(e) {
+            operForm.find("#pageNum").remove();
+            operForm.find("#amount").remove();
             operForm.submit();
         });
 
         $("button[data-oper='list']").on("click", function (e) {
             operForm.find("#boardId").remove();
-            operForm.attr("action", "/board/list")
+            operForm.attr("action", "/board/list");
             operForm.submit();
         });
     });

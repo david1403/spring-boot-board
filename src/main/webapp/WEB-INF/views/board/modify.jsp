@@ -34,9 +34,12 @@
                         <label>Text area</label> <textarea class="form-control" rows="3" name="content">${board.content}</textarea>
                     </div>
 
+                    <input type="hidden" id="pageNum" name="pageNum" value="${sessionScope.pageDto == null ?  1: sessionScope.pageDto.currentPage}">
+                    <input type="hidden" id="amount" name="amount" value="${sessionScope.pageDto == null ? 5 : sessionScope.pageDto.amount}">
+
                     <button type="submit" data-oper="modify" class="btn btn-default"> Modify </button>
                     <button type="submit" data-oper="remove" class="btn btn-danger"> Delete </button>
-                    <button type="button" data-oper="list" class="btn btn-info" onclick="location.href='/board/list'"> List </button>
+                    <button type="submit" data-oper="list" class="btn btn-info"> List </button>
 
                 </form>
             </div>
@@ -62,6 +65,13 @@
 
             if (operation === "remove") {
                 formObj.attr("action", "/board/remove");
+                formObj.find("#pageNum").remove();
+                formObj.find("#amount").remove();
+
+            } else if (operation === "list") {
+                formObj.attr("action", "/board/list").attr("method", "get");
+                formObj.find($(".form-control")).remove();
+                formObj.submit();
             }
             formObj.submit();
 

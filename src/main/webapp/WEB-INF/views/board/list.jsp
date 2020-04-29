@@ -48,6 +48,28 @@
                                 </c:forEach>
 
                             </table>
+                        <div class="pull-right">
+                            <ul class="pagination">
+                                <c:if test="${pageDto.prev}">
+                                    <li class="paginate_button previous"><a href="${pageDto.startPage - 1}"> Previous </a> </li>
+                                </c:if>
+
+                                <c:forEach var="num" begin="${pageDto.startPage}" end="${pageDto.endPage}">
+                                    <li class='paginate_button ${pageDto.currentPage == num ? "active":""}'><a href="${num}"> ${num}</a> </li>
+                                </c:forEach>
+
+                                <c:if test="${pageDto.next}">
+                                    <li class="paginate_button next"><a href="${pageDto.endPage + 1}"> Next </a> </li>
+                                </c:if>
+
+                            </ul>
+                            <form id="actionForm" action="/board/list" method="get">
+                                <input type="hidden" name="pageNum" value="">
+                                <input type="hidden" name="amount" value="">
+                            </form>
+
+                        </div>
+                        <%--    end Pagination--%>
                     </div>
                     <!-- /.panel-body -->
                 </div>
@@ -57,3 +79,15 @@
         </div>
         <!-- /.row -->
 <%@ include file="../includes/footer.jsp"%>
+<script type="text/javascript">
+    $(document).ready(function() {
+       var actionForm = $("#actionForm");
+       $(".paginate_button a").on("click", function (e) {
+
+           e.preventDefault();
+           actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+           actionForm.submit();
+       });
+
+    });
+</script>

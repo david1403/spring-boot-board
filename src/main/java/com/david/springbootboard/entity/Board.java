@@ -1,5 +1,6 @@
 package com.david.springbootboard.entity;
 
+import com.david.springbootboard.dto.MainPageBoardDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -44,4 +45,17 @@ public class Board extends BaseEntity {
     }
     public void increaseReplyCount() { this.replyCount += 1; }
     public void decreaseReplyCount() { this.replyCount -= 1; }
+
+    public MainPageBoardDto mainPageBoardDto() {
+        MainPageBoardDto mainPageBoardDto = new MainPageBoardDto();
+        mainPageBoardDto.setBoardId(boardId);
+        mainPageBoardDto.setTitle(title);
+        mainPageBoardDto.setContent(content);
+        mainPageBoardDto.setWriter(writer);
+        mainPageBoardDto.setLikeCount(likeCount);
+        mainPageBoardDto.setReplyCount(replyCount);
+        mainPageBoardDto.setCreatedDate(this.getCreatedDate());
+        mainPageBoardDto.setModifiedDate(this.getModifiedDate());
+        return mainPageBoardDto;
+    }
 }

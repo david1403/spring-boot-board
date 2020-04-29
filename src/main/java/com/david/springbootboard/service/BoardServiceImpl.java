@@ -5,6 +5,8 @@ import com.david.springbootboard.dao.ReplyRepository;
 import com.david.springbootboard.entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAll() {
-        return boardRepository.findAll();
+    public Page<Board> findAll(Pageable pageable) {
+        return boardRepository.findAll(pageable);
     }
 }

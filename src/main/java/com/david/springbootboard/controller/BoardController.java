@@ -1,32 +1,44 @@
 package com.david.springbootboard.controller;
 
+import com.david.springbootboard.dto.MainPageBoardDto;
+import com.david.springbootboard.dto.PageDto;
 import com.david.springbootboard.entity.Board;
 import com.david.springbootboard.service.BoardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 
 @Controller
 @Slf4j
 @RequestMapping("/board/*")
+@SessionAttributes("pageDto")
 @AllArgsConstructor
 public class BoardController {
     private BoardService boardService;
     private EntityManager entityManager;
 
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(
+            @RequestParam(name = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "amount", required = false, defaultValue = "5") Integer amount,
+            Model model) {
+        pageNum -= 1;
+        PageRequest pageRequest = PageRequest.of(pageNum, amount, Sort.by(Sort.Direction.DESC, "createdDate"));
+        Page<MainPageBoardDto> page = boardService.findAll(pageRequest).map(Board::mainPageBoardDto);
+        PageDto pageDto = new PageDto(page);
 
-        log.info("----- list -----");
-        model.addAttribute("list", boardService.findAll());
+
+        model.addAttribute("list", page.getContent());
+        model.addAttribute("pageDto", pageDto);
         return "/board/list";
     }
     @GetMapping("/register")
