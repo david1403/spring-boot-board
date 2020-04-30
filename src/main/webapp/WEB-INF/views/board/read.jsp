@@ -45,6 +45,8 @@
                     <input type="hidden" id="boardId" name="boardId" value="${board.boardId}">
                     <input type="hidden" id="pageNum" name="pageNum" value="${sessionScope.pageDto == null ?  1: sessionScope.pageDto.currentPage}">
                     <input type="hidden" id="amount" name="amount" value="${sessionScope.pageDto == null ? 5 : sessionScope.pageDto.amount}">
+                    <input type="hidden" id="type" name="type" value="${sessionScope.pageDto == null ? "" : sessionScope.pageDto.type}">
+                    <input type="hidden" id="keyword" name="keyword" value="${sessionScope.pageDto == null ? "" : sessionScope.pageDto.keyword}">
                 </form>
 
             </div>
@@ -65,6 +67,8 @@
         $("button[data-oper='modify']").on("click", function(e) {
             operForm.find("#pageNum").remove();
             operForm.find("#amount").remove();
+            operForm.find("#keyword").remove();
+            operForm.find("#type").remove();
             operForm.submit();
         });
 

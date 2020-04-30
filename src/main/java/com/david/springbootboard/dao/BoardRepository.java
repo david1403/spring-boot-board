@@ -24,4 +24,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Override
     Page<Board> findAll(Pageable pageable);
+
+    Page<Board> findByTitleContaining(String keyword, Pageable pageable);
+
+    Page<Board> findByContentContaining(String keyword, Pageable pageable);
 }

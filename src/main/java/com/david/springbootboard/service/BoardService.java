@@ -11,4 +11,6 @@ public interface BoardService {
     public Board findBoardbyId(Long id);
     public boolean remove(Long id);
     public Page<Board> findAll(Pageable pageable);
+    public Page<Board> findByTitleContaining(String keyword, Pageable pageable);
+    public Page<Board> findByContentContaining(String keyword, Pageable pageable);
 }

@@ -13,12 +13,16 @@ public class PageDto {
     private Integer currentPage;
     private Integer amount;
     private boolean prev, next;
+    private String type;
+    private String keyword;
 
-    public PageDto(Page page) {
+    public PageDto(Page page, String type, String keyword) {
         this.page = page;
         this.currentPage = page.getNumber() + 1;
         int totalElements = page.getNumberOfElements();
         this.amount = page.getSize();
+        this.type = type;
+        this.keyword = keyword;
 
 
         this.endPage = (int) (Math.ceil(currentPage / 10.0)) * 10;

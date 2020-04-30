@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import sun.applet.Main;
 
 import javax.persistence.EntityManager;
 
@@ -29,14 +30,23 @@ public class BoardController {
     @GetMapping("/list")
     public String list(
             @RequestParam(name = "pageNum", required = false, defaultValue = "1") Integer pageNum,
-            @RequestParam(name = "amount", required = false, defaultValue = "5") Integer amount,
+            @RequestParam(name = "amount", required = false, defaultValue = "10") Integer amount,
+            @RequestParam(name = "type", required = false, defaultValue = "") String type,
+            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
             Model model) {
         pageNum -= 1;
         PageRequest pageRequest = PageRequest.of(pageNum, amount, Sort.by(Sort.Direction.DESC, "createdDate"));
-        Page<MainPageBoardDto> page = boardService.findAll(pageRequest).map(Board::mainPageBoardDto);
-        PageDto pageDto = new PageDto(page);
-
-
+        Page<MainPageBoardDto> page = null;
+        if (type.equals("T")) {
+            page = boardService.findByTitleContaining(keyword, pageRequest).map(Board::mainPageBoardDto);
+        }
+        else if (type.equals("C")) {
+            page =boardService.findByContentContaining(keyword, pageRequest).map(Board::mainPageBoardDto);
+        }
+        else {
+            page = boardService.findAll(pageRequest).map(Board::mainPageBoardDto);
+        }
+        PageDto pageDto = new PageDto(page, type, keyword);
         model.addAttribute("list", page.getContent());
         model.addAttribute("pageDto", pageDto);
         return "/board/list";

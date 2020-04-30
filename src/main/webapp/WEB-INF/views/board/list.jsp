@@ -22,6 +22,7 @@
 
                     <div class="panel-body">
                             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+<%--                                게시판 목록--%>
                                 <thead>
                                 <tr>
                                     <th>#번호</th>
@@ -48,6 +49,25 @@
                                 </c:forEach>
 
                             </table>
+                        <!-- Search -->
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <form id="searchForm" action="/board/list" method="get">
+                                    <select name="type">
+                                        <option value="T"> 제목 </option>
+                                        <option value="C"> 내용 </option>
+                                    </select>
+                                    <input type="text" name="keyword">
+                                    <input type="hidden" name="pageNum" value="">
+                                    <input type="hidden" name="amount" value="">
+                                    <button class="btn btn-default"> Search </button>
+                                </form>
+
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
                         <div class="pull-right">
                             <ul class="pagination">
                                 <c:if test="${pageDto.prev}">
@@ -66,6 +86,8 @@
                             <form id="actionForm" action="/board/list" method="get">
                                 <input type="hidden" name="pageNum" value="">
                                 <input type="hidden" name="amount" value="">
+                                <input type="hidden" id="type" name="type" value="${sessionScope.pageDto == null ? "" : sessionScope.pageDto.type}">
+                                <input type="hidden" id="keyword" name="keyword" value="${sessionScope.pageDto == null ? "" : sessionScope.pageDto.keyword}">
                             </form>
 
                         </div>

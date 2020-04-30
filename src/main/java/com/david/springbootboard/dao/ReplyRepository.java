@@ -12,4 +12,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @Query("delete from Reply r where r.board.boardId = :boardId")
     public int deleteByBoardId(@Param("boardId") Long boardId);
 
+
 }
