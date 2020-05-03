@@ -41,6 +41,8 @@ public class Reply extends  BaseEntity {
         replyDto.setContent(this.content);
         replyDto.setReplyId(this.replyId);
         replyDto.setWriter(this.writer);
+        replyDto.setCreatedDate(this.getCreatedDate());
+        replyDto.setModifiedDate(this.getModifiedDate());
         return replyDto;
     }
 }

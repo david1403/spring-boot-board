@@ -58,28 +58,91 @@
 </div>
 <!-- end row -->
 
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <i class="fa fa-comments fa-fw"> </i> Reply
+            </div>
+
+            <div class="panel-body">
+                <ul class="chat">
+<%--                    start reply--%>
+                    <li class="left clearfix" data-rno = "12">
+                        <div>
+                            <div class="header">
+                                <strong class="primary-font">user00</strong>
+                                <small class="pull-right text-muted">2018-01-01 13:13</small>
+                            </div>
+                                <p> Good Job! </p>
+                        </div>
+                    </li>
+<%--                    end reply--%>
+                </ul>
+<%--                end ul--%>
+            </div>
+<%--            end .panel .chat-panel--%>
+        </div>
+    </div>
+</div>
+
 
 <%@include file="../includes/footer.jsp"%>
 <%--Javascript Module for reply--%>
 <script type="text/javascript" src="/js/reply.js"></script>
 
 <%--Test javascript --%>
-<script type="text/javascript">
-    console.log("------JS TEST -------");
-    var boardId = "${board.boardId}";
+<%--<script type="text/javascript">--%>
+<%--    console.log("------JS TEST -------");--%>
+<%--    var boardId = "${board.boardId}";--%>
 
-    <%--replyService.add(--%>
-    <%--    {content:"HelloWorld!", boardId:boardId},--%>
-    <%--    function(result) {--%>
-    <%--        alert("RESULT: " + result);--%>
-    <%--    }--%>
-    <%--)--%>
-    replyService.getList({boardId:boardId, pageNum:2}, function (list) {
-        console.log(list.length);
-        for (var i = 0 ; i < list.length ; i++) {
-            console.log(list[i]);
-        }
-    });
+    // replyService.add(
+    //     {content:"HelloWorld!", boardId:boardId},
+    //     function(result) {
+    //         alert("RESULT: " + result);
+    //     }
+    // )
+
+
+    // replyService.getList({boardId:boardId, pageNum:2}, function (list) {
+    //     console.log(list);
+    // });
+
+    // replyService.remove(5, function(count) {
+    //     if (count === "success") {
+    //         alert("REMOVED");
+    //     }
+    // }, function (err) {
+    //     alert("ERROR");
+    // });
+<%-- </script>--%>
+
+<%--load replies--%>
+<script type="text/javascript">
+    var boardId = "${board.boardId}";
+    var replyUL = $(".chat");
+
+    showList(1);
+
+    function showList(pageNum) {
+        replyService.getList({boardId: boardId, pageNum: pageNum || 1}, function(data) {
+            var list = data.content;
+            var str = "";
+            if (list == null || list.length == 0) {
+                replyUL.html("");
+                return;
+            }
+            for (var i = 0 ; i < list.length ; i++) {
+                str += "<li class='left clearfix' replyId='" + list[i].replyId + "'>";
+                str += " <div><div class='header'><strong class='primary-font'>" + list[i].writer + "</strong>";
+                str += " <small class='pull-right text-muted'>" + list[i].createdDate + "</small></div>";
+                str += "<p>" + list[i].content + "</p></div></li>";
+            }
+            replyUL.html(str);
+        });
+    }
 
 </script>
 

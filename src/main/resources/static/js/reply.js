@@ -36,8 +36,26 @@ var replyService = (function () {
         });
     }
 
+    function remove(replyId, callback, error) {
+        $.ajax({
+            type: "delete",
+            url : '/replies/' + replyId,
+            success(result, status, xhr) {
+                if (callback) {
+                    callback(result);
+                }
+            },
+            error : function(xhr, status, er) {
+                if (error) {
+                    error(er);
+                }
+            }
+        });
+    }
+
     return {
         add:add,
-        getList: getList
+        getList: getList,
+        remove: remove
     };
 })();
