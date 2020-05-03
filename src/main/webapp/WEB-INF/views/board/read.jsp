@@ -58,7 +58,30 @@
 </div>
 <!-- end row -->
 
+
 <%@include file="../includes/footer.jsp"%>
+<%--Javascript Module for reply--%>
+<script type="text/javascript" src="/js/reply.js"></script>
+
+<%--Test javascript --%>
+<script type="text/javascript">
+    console.log("------JS TEST -------");
+    var boardId = "${board.boardId}";
+
+    <%--replyService.add(--%>
+    <%--    {content:"HelloWorld!", boardId:boardId},--%>
+    <%--    function(result) {--%>
+    <%--        alert("RESULT: " + result);--%>
+    <%--    }--%>
+    <%--)--%>
+    replyService.getList({boardId:boardId, pageNum:2}, function (list) {
+        console.log(list.length);
+        for (var i = 0 ; i < list.length ; i++) {
+            console.log(list[i]);
+        }
+    });
+
+</script>
 
 <script type="text/javascript">
     $(document).ready(function() {

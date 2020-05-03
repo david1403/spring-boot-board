@@ -1,5 +1,6 @@
 package com.david.springbootboard.entity;
 
+import com.david.springbootboard.dto.ReplyDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -32,5 +33,14 @@ public class Reply extends  BaseEntity {
         board.getReplyList().add(this);
         board.increaseReplyCount();
         this.board = board;
+    }
+
+    public ReplyDto replyDto() {
+        ReplyDto replyDto = new ReplyDto();
+        replyDto.setBoard(this.board.mainPageBoardDto());
+        replyDto.setContent(this.content);
+        replyDto.setReplyId(this.replyId);
+        replyDto.setWriter(this.writer);
+        return replyDto;
     }
 }
