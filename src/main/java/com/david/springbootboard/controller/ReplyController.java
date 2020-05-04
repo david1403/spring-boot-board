@@ -50,7 +50,11 @@ public class ReplyController {
     @GetMapping("/pages/{boardId}/{pageNum}")
     public Page<ReplyDto> getList(@PathVariable("boardId") Long boardId, @PathVariable("pageNum") int pageNum) {
         pageNum -= 1;
-        PageRequest pageRequest = PageRequest.of(pageNum, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+        if (pageNum < 0) {
+            pageNum = 0;
+        }
+
+        PageRequest pageRequest = PageRequest.of(pageNum, 10, Sort.by(Sort.Direction.ASC, "createdDate"));
         Page<ReplyDto> replyDtos = replyService.getList(boardId, pageRequest).map(Reply::replyDto);
         return replyDtos;
     }

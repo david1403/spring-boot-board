@@ -79,6 +79,10 @@
 <%--                end ul--%>
             </div>
 <%--            end .panel .chat-panel--%>
+            <div class="panel-footer">
+
+            </div>
+
         </div>
 
     </div>
@@ -152,15 +156,18 @@
 
     showList(1);
 
-    function showList(pageNum) {
-        replyService.getList({boardId: boardId, pageNum: pageNum || 1}, function(data) {
+    function showList(page) {
+        replyService.getList({boardId: boardId, pageNum: page|| 1}, function(data) {
             var list = data.content;
+            var replyCnt = data.totalElements;
+            console.log(list);
+            console.log(replyCnt);
             var str = "";
             if (list == null || list.length == 0) {
                 replyUL.html("");
                 return;
             }
-            if (pageNum === -1) {
+            if (page == -1) {
                 pageNum = data.totalPages;
                 showList(pageNum);
                 return;
@@ -175,6 +182,8 @@
                 str += "<p>" + list[i].content + "</p></div></li>";
             }
             replyUL.html(str);
+
+            showReplyPage(replyCnt);
         });
     }
     // Modal 로 구현되는 부분 - 새 댓글 등록
@@ -211,6 +220,45 @@
                 showList(1);
             })
         }
+    })
+    // 댓글 paging 목록 보여주기
+    var pageNum = 1;
+    var replyPageFooter = $(".panel-footer");
+
+    function showReplyPage(replyCount) {
+        var endNum = Math.ceil(pageNum / 10.0) * 10;
+        var startNum = endNum - 9;
+
+        var prev = startNum != 1;
+        var next = false;
+
+        if (endNum * 10 >= replyCount) {
+            endNum = Math.ceil(replyCount / 10.0);
+        }
+        if (endNum * 10 < replyCount) {
+            next = true;
+        }
+
+        var str = "<ul class='pagination pull-right'>";
+        if (prev) {
+            str += "<li class='page-item'><a class='page-link' href='" + (startNum - 1) + "'>Previous</a></li>"
+        }
+        for (var i = startNum ; i <= endNum ; i++) {
+            var active = pageNum == i ? "active" : "";
+            str += "<li class='page-item " + active + "'><a class='page-link' href='" + i + "'>"+i+"</a></li>"
+        }
+        if (next) {
+            str += "<li class='page-item'><a class='page-link' href='" + (endNum + 1) + "'>Previous</a></li>"
+        }
+        str += "</ul></div>";
+
+        replyPageFooter.html(str);
+    }
+
+    replyPageFooter.on("click", "li a", function(e) {
+        e.preventDefault();
+        pageNum = $(this).attr("href");
+        showList(pageNum);
     })
 
 </script>
