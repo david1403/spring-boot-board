@@ -30,20 +30,20 @@
                                     <th>작성자</th>
                                     <th>작성일</th>
                                     <th>수정일</th>
-                                    <th>댓글 수</th>
                                     <th>좋아요</th>
                                 </tr>
                                 </thead>
                                 <c:forEach items="${list}" var="board">
                                     <tr>
                                         <td>${board.boardId}</td>
-                                        <td><a href="/board/read?boardId=${board.boardId}"> ${board.title} </a></td>
+                                        <td><a href="/board/read?boardId=${board.boardId}"> ${board.title}
+                                            <b>[ ${board.likeCount} ]</b>
+                                        </a></td>
                                         <td>${board.writer}</td>
                                         <fmt:parseDate value="${board.createdDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedCreatedDate" type="both"/>
                                         <fmt:parseDate value="${board.modifiedDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedModifiedDate" type="both"/>
-                                        <td><fmt:formatDate pattern="yyyy-MM-dd" value="${parsedCreatedDate}"/></td>
-                                        <td><fmt:formatDate pattern="yyyy-MM-dd" value="${parsedModifiedDate}"/></td>
-                                        <td>${board.replyCount}</td>
+                                        <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parsedCreatedDate}"/></td>
+                                        <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parsedModifiedDate}"/></td>
                                         <td>${board.likeCount}</td>
                                     </tr>
                                 </c:forEach>

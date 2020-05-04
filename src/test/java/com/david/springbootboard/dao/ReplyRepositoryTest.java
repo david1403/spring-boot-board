@@ -1,5 +1,6 @@
 package com.david.springbootboard.dao;
 
+import com.david.springbootboard.entity.Board;
 import com.david.springbootboard.entity.Reply;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,6 +33,17 @@ class ReplyRepositoryTest {
         entityManager.clear();
         Long id = reply.getReplyId();
         System.out.println("id = " + id);
+    }
 
+    @Test
+    public void deleteTest() {
+        Reply reply = replyRepository.findByReplyId(19L);
+        Board board = reply.getBoard();
+        replyRepository.deleteById((long) 19);
+        board.decreaseReplyCount();
+
+
+        entityManager.flush();
+        entityManager.clear();
     }
 }

@@ -61,6 +61,7 @@ public class ReplyController {
 
     @DeleteMapping("/{replyId}")
     public ResponseEntity<String> delete(@PathVariable("replyId") Long replyId) {
+
         replyService.remove(replyId);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }

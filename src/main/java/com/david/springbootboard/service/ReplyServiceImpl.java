@@ -1,12 +1,14 @@
 package com.david.springbootboard.service;
 
 import com.david.springbootboard.dao.ReplyRepository;
+import com.david.springbootboard.entity.Board;
 import com.david.springbootboard.entity.Reply;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
@@ -23,13 +25,17 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    @Transactional
     public void remove(Long replyId) {
+        Reply reply = replyRepository.findByReplyId(replyId);
+        Board board = reply.getBoard();
+        board.decreaseReplyCount();
         replyRepository.deleteById(replyId);
     }
 
     @Override
     public Reply get(Long replyId) {
-        return replyRepository.findById(replyId).get();
+        return replyRepository.findByReplyId(replyId);
     }
 
     @Override
