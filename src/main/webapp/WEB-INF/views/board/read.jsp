@@ -65,28 +65,54 @@
 
             <div class="panel-heading">
                 <i class="fa fa-comments fa-fw"> </i> Reply
+                <button id="addReplyBtn" class="btn btn-primary btn-xs pull-right"> New Reply </button>
             </div>
+
+
 
             <div class="panel-body">
                 <ul class="chat">
 <%--                    start reply--%>
-                    <li class="left clearfix" data-rno = "12">
-                        <div>
-                            <div class="header">
-                                <strong class="primary-font">user00</strong>
-                                <small class="pull-right text-muted">2018-01-01 13:13</small>
-                            </div>
-                                <p> Good Job! </p>
-                        </div>
-                    </li>
+
 <%--                    end reply--%>
                 </ul>
 <%--                end ul--%>
             </div>
 <%--            end .panel .chat-panel--%>
         </div>
+
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Reply Modal</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label> Reply </label>
+                    <input class="form-control" name="reply" value="New Reply">
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+
+                <button id="modalRegisterBtn" type="button" class="btn btn-primary"> Register </button>
+                <button id="modalCloseBtn" type="button" class="btn btn-default"> Close </button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 <%@include file="../includes/footer.jsp"%>
@@ -98,25 +124,25 @@
 <%--    console.log("------JS TEST -------");--%>
 <%--    var boardId = "${board.boardId}";--%>
 
-    // replyService.add(
-    //     {content:"HelloWorld!", boardId:boardId},
-    //     function(result) {
-    //         alert("RESULT: " + result);
-    //     }
-    // )
+<%--    // replyService.add(--%>
+<%--    //     {content:"HelloWorld!", boardId:boardId},--%>
+<%--    //     function(result) {--%>
+<%--    //         alert("RESULT: " + result);--%>
+<%--    //     }--%>
+<%--    // )--%>
 
 
-    // replyService.getList({boardId:boardId, pageNum:2}, function (list) {
-    //     console.log(list);
-    // });
+<%--    // replyService.getList({boardId:boardId, pageNum:2}, function (list) {--%>
+<%--    //     console.log(list);--%>
+<%--    // });--%>
 
-    // replyService.remove(5, function(count) {
-    //     if (count === "success") {
-    //         alert("REMOVED");
-    //     }
-    // }, function (err) {
-    //     alert("ERROR");
-    // });
+<%--    // replyService.remove(5, function(count) {--%>
+<%--    //     if (count === "success") {--%>
+<%--    //         alert("REMOVED");--%>
+<%--    //     }--%>
+<%--    // }, function (err) {--%>
+<%--    //     alert("ERROR");--%>
+<%--    // });--%>
 <%-- </script>--%>
 
 <%--load replies--%>
@@ -134,15 +160,58 @@
                 replyUL.html("");
                 return;
             }
+            if (pageNum === -1) {
+                pageNum = data.totalPages;
+                showList(pageNum);
+                return;
+            }
+
+
             for (var i = 0 ; i < list.length ; i++) {
-                str += "<li class='left clearfix' replyId='" + list[i].replyId + "'>";
+                str += "<li class='left clearfix' data-replyid='" + list[i].replyId + "'>";
                 str += " <div><div class='header'><strong class='primary-font'>" + list[i].writer + "</strong>";
                 str += " <small class='pull-right text-muted'>" + list[i].createdDate + "</small></div>";
+                str += '<button type="button" class="btn-sm btn-danger pull-right"> Delete </button>';
                 str += "<p>" + list[i].content + "</p></div></li>";
             }
             replyUL.html(str);
         });
     }
+    // Modal 로 구현되는 부분 - 새 댓글 등록
+    var modal = $(".modal");
+    var modalInputReply = modal.find("input[name='reply']");
+
+    var modalRegisterBtn = $("#modalRegisterBtn");
+
+    $("#addReplyBtn").on("click", function(e) {
+        modal.find("input").val("");
+        modalRegisterBtn.show();
+
+        $(".modal").modal("show");
+    })
+
+    modalRegisterBtn.on("click", function (e) {
+        var reply = {content: modalInputReply.val(), boardId: boardId};
+        replyService.add(reply, function(result) {
+            alert(result);
+            modal.find("input").val("");
+            modal.modal("hide");
+
+            showList(-1);
+        });
+    });
+
+    // 댓글 삭제 버튼 클릭
+    $(".chat").on("click", "button", function(e) {
+        var replyId = $(this).closest("li").data("replyid");
+        var check = confirm("정말로 삭제하시겠습니까?");
+        if (check) {
+            replyService.remove(replyId, function(result) {
+                alert("성공적으로 삭제되었습니다");
+                showList(1);
+            })
+        }
+    })
 
 </script>
 
